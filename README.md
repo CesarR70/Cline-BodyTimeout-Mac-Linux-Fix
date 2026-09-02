@@ -36,7 +36,7 @@ were removed from this folder).
 
 
 ooh I broke it by renaming the folder because The injector bakes an __absolute path__ into Cline's `extension.js`
-it is fixed now but there is 1 caveate
+it is fixed now but there is 1 caveat
 the zero-timeout Agent is installed as undici's __global__ dispatcher in Cline's process, so requests to *remote* providers also lose the 300 s safety cap. In practice that just means a genuinely dead connection hangs instead of failing after 5 minutes — usually a non-issue but I thought you should know.
 
 

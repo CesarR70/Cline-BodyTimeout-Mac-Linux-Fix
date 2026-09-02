@@ -6,7 +6,7 @@
  * file (the root extension.js, which loads both the "next" and "legacy"
  * bundles). Idempotent - safe to run again.
  *
- *   Usage:  node C:\ollama-timeout-fix\patch-cline.cjs
+ *   Usage:  node C:\cline-timeout-fix\patch-cline.cjs
  *
  * After Cline updates to a new version, its files are replaced - just run
  * this script again, then reload the VS Code window.
@@ -54,22 +54,48 @@ function main() {
   }
 
   const src = fs.readFileSync(entryFile, 'utf8');
-  if (src.includes(MARKER)) {
+
+  // Forward slashes in the require() path (works on Windows too).
+  const guardRef = GUARD_PATH.replace(/\\/g, '/');
+  const tryLine =
+    'try{require("' + guardRef + '");}catch(e){try{console.error("[cline-undici-guard] load failed:",e&&e.message);}catch(_){}}\n';
+  const inject = MARKER + '\n' + tryLine;
+
+  if (src.includes('require("' + guardRef + '")')) {
     console.log('Already patched (no change): ' + entryFile);
     return;
   }
 
+  if (src.includes(MARKER)) {
+    // A stale injection exists - usually because this folder was moved or
+    // renamed. Rewrite it so it points at the current location.
+    let fixed;
+    if (src.startsWith(MARKER)) {
+      const endOfLine2 = src.indexOf('\n', src.indexOf('\n') + 1);
+      fixed = inject + src.slice(endOfLine2 + 1);
+    } else {
+      fixed = src.replace(
+        /try\{require\("[^"]*?cline-undici-guard\.cjs"\);\}/,
+        'try{require("' + guardRef + '");}'
+      );
+    }
+    if (!fixed || !fixed.includes('require("' + guardRef + '")')) {
+      console.error('Found a stale patch but could not rewrite it automatically.');
+      console.error('Restore from ' + entryFile + '.orig-bak and run this script again.');
+      process.exit(1);
+    }
+    fs.writeFileSync(entryFile, fixed);
+    console.log('Re-pointed the existing patch to: ' + guardRef);
+    console.log('Now reload the window: Command Palette (Ctrl+Shift+P) > "Developer: Reload Window"');
+    return;
+  }
+
+  // Fresh patch: keep a pristine backup of the original entry file.
   const backup = entryFile + '.orig-bak';
   if (!fs.existsSync(backup)) {
     fs.copyFileSync(entryFile, backup);
     console.log('Backup created: ' + backup);
   }
-
-  // Forward slashes in the require() path (works on Windows too).
-  const guardRef = GUARD_PATH.replace(/\\/g, '/');
-  const inject =
-    MARKER + '\n' +
-    'try{require("' + guardRef + '");}catch(e){try{console.error("[cline-undici-guard] load failed:",e&&e.message);}catch(_){}}\n';
 
   fs.writeFileSync(entryFile, inject + src);
   console.log('Patched: ' + entryFile);

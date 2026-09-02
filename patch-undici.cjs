@@ -123,6 +123,6 @@ try {
   main();
 } catch (e) {
   try {
-    console.error('[ollama-timeout-fix] patch NOT applied:', (e && e.message) ? e.message : e);
+    console.error('[cline-timeout-fix] patch NOT applied:', (e && e.message) ? e.message : e);
   } catch (_) { /* ignore */ }
 }

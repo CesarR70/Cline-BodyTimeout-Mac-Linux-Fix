@@ -34,7 +34,7 @@ function log(entry) {
 
 try {
   // The actual patch (undici Agent + global fetch wrapper). Resolves its own
-  // undici from C:\ollama-timeout-fix\node_modules.
+  // undici from C:\cline-timeout-fix\node_modules.
   require('./patch-undici.cjs');
 
   log({

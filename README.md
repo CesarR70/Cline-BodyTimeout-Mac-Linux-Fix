@@ -34,6 +34,12 @@ apply `NODE_OPTIONS` (`--require`) in packaged apps**:
 So that approach was abandoned (its launcher .bat and preload machinery
 were removed from this folder).
 
+
+ooh I broke it by renaming the folder because The injector bakes an __absolute path__ into Cline's `extension.js`
+it is fixed now but there is 1 caveate
+the zero-timeout Agent is installed as undici's __global__ dispatcher in Cline's process, so requests to *remote* providers also lose the 300 s safety cap. In practice that just means a genuinely dead connection hangs instead of failing after 5 minutes — usually a non-issue but I thought you should know.
+
+
 ## How the fix works now
 
 `patch-cline.cjs` injects two lines at the very top of Cline's extension
@@ -80,6 +86,9 @@ unpatched (same behavior as before the fix).
   
   then reload the VS Code window. The script is idempotent — running it
   twice is safe.
+
+  - After **moving or renaming this folder**: the path baked into Cline is absolute, so re-run the
+    injector - it detects a stale path and re-points it automatically.
 
   You don't run it on normal startup.
   The patch is written directly into Cline's files on disk and persists across reboots/reloads

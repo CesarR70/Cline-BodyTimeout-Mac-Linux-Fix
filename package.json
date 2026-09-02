@@ -1,0 +1,9 @@
+{
+  "name": "ollama-timeout-fix",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Preload patch that removes undici's 300s body/headers timeout for Cline <-> Ollama streaming",
+  "dependencies": {
+    "undici": "^7.16.0"
+  }
+}

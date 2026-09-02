@@ -1,6 +1,4 @@
-# Cline-Body-Timeout-Fix
-Fixes "terminated: BodyTimeoutError: Body Timeout Error (UND_ERR_BODY_TIMEOUT)" with Cline in Vscode
-
+# Cline Body-Timeout Fix
 
 Stops `terminated: BodyTimeoutError: Body Timeout Error (UND_ERR_BODY_TIMEOUT)` from
 killing Cline's conversations with a local Ollama model.

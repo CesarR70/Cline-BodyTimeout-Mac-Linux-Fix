@@ -20,7 +20,7 @@ If needed, install Node using the official installer or, if you use Homebrew:
 brew install node
 ```
 
-For this checkout, preview the target without changing anything:
+For testing, you can preview the target without changing anything:
 
 ```bash
 bash "./cline-patch.sh" --dry-run

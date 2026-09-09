@@ -32,8 +32,7 @@ Then apply it:
 bash "./cline-patch.sh"
 ```
 
-The paths in these examples are for this checkout; use your repository's absolute
-path if you move it or clone elsewhere. You can run the script from any working
+You can run the script from any working
 directory; paths with spaces are supported. No `sudo` or `chmod` is needed when
 invoking it with `bash`.
 

@@ -8,12 +8,14 @@ function run(mode, bodyTimeoutMs) {
   if (bodyTimeoutMs !== undefined) env.OLLAMA_FIX_BODY_TIMEOUT_MS = String(bodyTimeoutMs);
   delete env.OLLAMA_FIX_HOSTS;
   delete env.OLLAMA_FIX_DEBUG;
+  delete env.OLLAMA_FIX_HEADERS_TIMEOUT_MS;
   console.log(`\n===== mode=${mode} bodyTimeout=${bodyTimeoutMs} =====`);
   const r = spawnSync(process.execPath,
     ['--require', path.join(__dirname, 'patch-undici.cjs'), path.join(__dirname, 'test-run.cjs'), mode],
-    { env, encoding: 'utf8' });
+    { env, encoding: 'utf8', timeout: 30000 });
   process.stdout.write(r.stdout || '');
   if (r.stderr) process.stderr.write(r.stderr);
+  if (r.error) console.error(r.error);
   return r.status;
 }
 

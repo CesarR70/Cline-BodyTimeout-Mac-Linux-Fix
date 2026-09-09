@@ -17,7 +17,8 @@
  * It also appends one JSON line per load to cline-patch-log.txt next to this
  * file so we can prove it ran inside the VS Code process that hosts Cline.
  *
- * Fail-safe: if anything here throws, Cline simply continues unpatched.
+ * Load errors are logged without preventing Cline from loading. A failure
+ * partway through the core patch may leave partial global changes in place.
  */
 
 const fs = require('fs');
@@ -34,13 +35,13 @@ function log(entry) {
 
 try {
   // The actual patch (undici Agent + global fetch wrapper). Resolves its own
-  // undici from C:\cline-timeout-fix\node_modules.
+  // undici from this repository's node_modules folder on any platform.
   require('./patch-undici.cjs');
 
   log({
     ts: new Date().toISOString(),
     pid: process.pid,
-    ok: true,
+    ok: Boolean(globalThis.__OLLAMA_TIMEOUT_FIX__?.loaded),
     marker: Boolean(globalThis.__OLLAMA_TIMEOUT_FIX__),
     agent: globalThis.__OLLAMA_TIMEOUT_FIX__ || null,
     argv: (process.argv.join(' ') || '').slice(0, 400),

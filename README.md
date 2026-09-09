@@ -23,13 +23,13 @@ brew install node
 For this checkout, preview the target without changing anything:
 
 ```bash
-bash "/Users/cesar/Development/Cline-Body-Timeout-Fix/cline-patch.sh" --dry-run
+bash "./cline-patch.sh" --dry-run
 ```
 
 Then apply it:
 
 ```bash
-bash "/Users/cesar/Development/Cline-Body-Timeout-Fix/cline-patch.sh"
+bash "./cline-patch.sh"
 ```
 
 The paths in these examples are for this checkout; use your repository's absolute
@@ -71,16 +71,16 @@ Do not delete it before restoring the patch.
 Check the injection on disk (does not load the guard or install dependencies):
 
 ```bash
-bash "/Users/cesar/Development/Cline-Body-Timeout-Fix/cline-patch.sh" --status
+bash "./cline-patch.sh" --status
 ```
 
 After reloading VS Code and opening Cline, inspect the activation log:
 
 ```bash
-node "/Users/cesar/Development/Cline-Body-Timeout-Fix/check-log.cjs"
+node "./check-log.cjs"
 ```
 
-The log is `/Users/cesar/Development/Cline-Body-Timeout-Fix/cline-patch-log.txt` for
+The log is `cline-patch-log.txt` for
 this checkout. Look for a **new timestamp with both `ok=true` and `marker=true`**.
 An old successful entry is not proof that a newly updated extension loaded the
 patch. `--status` only reports the on-disk injection; it does not prove runtime
@@ -105,8 +105,8 @@ target one exact version instead of automatic newest-version selection. For
 example, to explicitly target the version inspected on this Mac:
 
 ```bash
-bash "/Users/cesar/Development/Cline-Body-Timeout-Fix/cline-patch.sh" \
-  --extension-dir "/Users/cesar/.vscode/extensions/saoudrizwan.claude-dev-4.1.17"
+bash "./cline-patch.sh" \
+  --extension-dir ".vscode/extensions/saoudrizwan.claude-dev-4.1.17"
 ```
 
 These selectors also work with `--dry-run`, `--status`, and `--restore`. Use them
@@ -121,7 +121,7 @@ path will not be accessible inside another machine/container.
 ## Restore / uninstall
 
 ```bash
-bash "/Users/cesar/Development/Cline-Body-Timeout-Fix/cline-patch.sh" --restore
+bash "./cline-patch.sh" --restore
 ```
 
 Then reload VS Code. The script verifies that the backup matches the current
@@ -191,7 +191,7 @@ setup. Use nonnegative millisecond integers within the signed 32-bit range.
 
 ## Windows
 
-The original `/Users/cesar/Development/Cline-Body-Timeout-Fix/cline-patch.bat` file
+The original `Cline-Body-Timeout-Fix/cline-patch.bat` file
 remains available in the repository (use its actual Windows checkout path there).
 Install Node/npm and run `npm ci --ignore-scripts --no-audit --no-fund` from that
 checkout once before using the batch file. The shared JavaScript injector also
@@ -203,7 +203,7 @@ Ctrl+Shift+P → Developer: Reload Window. The Bash port does not require Window
 From this checkout:
 
 ```bash
-npm --prefix "/Users/cesar/Development/Cline-Body-Timeout-Fix" test
+npm --prefix "/Users/yourUsername/yourDownloadFolder/Cline-Body-Timeout-Fix" test
 ```
 
 The installer tests create temporary fake extensions and cover idempotence,
